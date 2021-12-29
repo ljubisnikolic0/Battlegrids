@@ -1,13 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// © 2021 Matthew Barham. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/PlayerController.h"
 #include "BGPlayerController.generated.h"
 
 /**
- * 
+ * Parent Player Controller class for BattleGrids
  */
 UCLASS()
 class BATTLEGRIDS_API ABGPlayerController : public APlayerController
@@ -16,8 +17,5 @@ class BATTLEGRIDS_API ABGPlayerController : public APlayerController
 
 public:
 
-	virtual void SetupInputComponent() override;
-
-	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "BGPlayerController|Movement")
-	void UpdateTransformOnServer(FTransform NewTransform);
+	ABGPlayerController();
 };
