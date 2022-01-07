@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.26",
+	"EngineAssociation": "{1D4608DD-43E5-DC70-E3CF-1DBA6C3E0D1E}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -31,6 +31,8 @@
 		"LinuxAArch64NoEditor",
 		"MacNoEditor",
 		"WindowsNoEditorWin32",
-		"WindowsNoEditor"
+		"WindowsNoEditor",
+		"Android",
+		"IOS"
 	]
 }
