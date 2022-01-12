@@ -5,28 +5,48 @@
 #include "Engine/DataTable.h"
 #include "BGTypes.generated.h"
 
-USTRUCT(BlueprintType)
-struct FBGTokenBank : public FTableRowBase
+UENUM(BlueprintType)
+enum class EBGObjectType : uint8
 {
-	GENERATED_BODY()
+	None UMETA(DisplayName = "None"),
+	Token UMETA(DisplayName = "Token"),
+	Structure UMETA(DisplayName = "Structure"),
+	Board UMETA(DisplayName = "Board")
+};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText TokenName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class ABGToken> TokenClassReference;
+UENUM(BlueprintType)
+enum class EBGControlMode : uint8
+{
+	Build UMETA(DisplayName = "Build"),
+	Edit UMETA(DisplayName = "Edit"),
+	Move UMETA(DisplayName = "Move")
 };
 
 USTRUCT(BlueprintType)
-struct FBGStructureBank : public FTableRowBase
+struct FBGStaticMeshBank : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText StructureName;
+	FText StaticMeshName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class ABGSplineStructure> StructureClassReference;
+	class UStaticMesh* StaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EBGObjectType ObjectType;
+};
+
+USTRUCT(BlueprintType)
+struct FBGMaterialInstanceBank : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText MaterialInstanceName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UMaterialInstance* MaterialInstance;
 };
 
 USTRUCT(BlueprintType)
@@ -35,18 +55,35 @@ struct FBGStructureInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* StaticMesh;
+	UStaticMesh* WallStaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstance* MaterialInstance;
+	UMaterialInstance* WallMaskedMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMesh* CornerStaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UMaterialInstance* CornerMaskedMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMesh* BaseStaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UMaterialInstance* BaseMaterialInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform Transform;
 
 	FBGStructureInfo() = default;
 
-	FBGStructureInfo(UStaticMesh* NewStaticMesh, UMaterialInstance* NewMaterialInstance, FTransform const NewTransform)
-		: StaticMesh(NewStaticMesh), MaterialInstance(NewMaterialInstance), Transform(NewTransform)
+	FBGStructureInfo(UStaticMesh* NewWallStaticMesh, UMaterialInstance* NewWallMaskedMaterialInstance,
+	                 UStaticMesh* NewCornerStaticMesh, UMaterialInstance* NewCornerMaskedMaterialInstance,
+	                 UStaticMesh* NewBaseStaticMesh, UMaterialInstance* NewBaseMaterialInstance,
+	                 FTransform const NewTransform)
+		: WallStaticMesh(NewWallStaticMesh), WallMaskedMaterialInstance(NewWallMaskedMaterialInstance),
+		  CornerStaticMesh(NewCornerStaticMesh), CornerMaskedMaterialInstance(NewCornerMaskedMaterialInstance),
+		  BaseStaticMesh(NewBaseStaticMesh), BaseMaterialInstance(NewBaseMaterialInstance), Transform(NewTransform)
 	{
 	}
 };
@@ -89,21 +126,4 @@ struct FBGTileInfo
 		: X(NewX), Y(NewY), Z(NewZ)
 	{
 	}
-};
-
-UENUM(BlueprintType)
-enum class EBGGrabbedObjectType : uint8
-{
-	None UMETA(DisplayName = "None"),
-	Token UMETA(DisplayName = "Token"),
-	Structure UMETA(DisplayName = "Structure"),
-	Board UMETA(DisplayName = "Board")
-};
-
-UENUM(BlueprintType)
-enum class EBGControlMode : uint8
-{
-	Build UMETA(DisplayName = "Build"),
-	Edit UMETA(DisplayName = "Edit"),
-	Move UMETA(DisplayName = "Move")
 };
