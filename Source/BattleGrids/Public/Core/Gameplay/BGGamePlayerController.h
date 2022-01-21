@@ -14,8 +14,10 @@
 class ABGBoard;
 class ABGDoor;
 class ABGPlayerState;
+class ABGSplineStructure;
 class ABGStructure;
 class ABGTile;
+class ABGToken;
 
 /**
  * 
@@ -54,18 +56,12 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "BGGamePlayerController|Control")
 	bool GetGameMasterPermissions() const;
 
+	// Renders an outline around an Actor beneath the mouse cursor using Custom Render Depth and a Post-Process Material
 	UFUNCTION(BlueprintCallable, Category = "BGGamePlayerController|Control")
 	void OutlineObject();
 
 	////////////////////////
 	/// Token Functions
-
-	UFUNCTION(BlueprintCallable, Category = "BGGamePlayerController|Token")
-	void HandleTokenSelection();
-
-	UFUNCTION(BlueprintCallable, Category = "BGGamePlayerController|Token")
-	void SetTokenCollisionAndPhysics(ABGToken* TokenToModify, bool const bPhysicsOn, bool const bGravityOn,
-	                                 ECollisionEnabled::Type const CollisionType);
 
 	UFUNCTION(BlueprintCallable, Category = "BGGamePlayerController|Token")
 	void MoveTokenToLocation(bool const bHolding);
@@ -187,10 +183,6 @@ protected:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "BGGamePlayerController|Token|Network")
 	void SpawnTokenAtLocation_Server(FVector const& Location, FName const& MeshName, FName const& MaterialName);
 
-	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "BGGamePlayerController|Token|Network")
-	void SetTokenCollisionAndPhysics_Server(ABGToken* TokenToModify, bool const bPhysicsOn, bool const bGravityOn,
-	                                        ECollisionEnabled::Type const CollisionType);
-
 	UFUNCTION(Server, Unreliable, BlueprintCallable, Category = "BGGamePlayerController|Token|Network")
 	void MoveTokenToLocation_Server(ABGToken* TokenToMove, FVector const& Location,
 	                                FRotator const TokenRotation);
@@ -308,16 +300,16 @@ protected:
 	EBGObjectType GrabbedObject{EBGObjectType::None};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BGGamePlayerController|Config")
-	class ABGToken* GrabbedToken;
+	ABGToken* GrabbedToken{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BGGamePlayerController|Config")
-	class ABGSplineStructure* GrabbedStructure;
+	ABGSplineStructure* GrabbedStructure{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BGGamePlayerController|Config")
-	class ABGBoard* GrabbedBoard;
+	ABGBoard* GrabbedBoard{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BGGamePlayerController|Config")
-	UStaticMeshComponent* CurrentOutlinedTarget{};
+	AActor* CurrentOutlinedActor{};
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "BGGamePlayerController|Config")
 	TArray<FName> TokenNames;
@@ -332,7 +324,7 @@ protected:
 	int NearestIndexToClick{-1};
 
 	UPROPERTY()
-	AActor* LastTargetedActor{};
+	AActor* LastClickedActor{};
 
 	UPROPERTY()
 	FHitResult LastHitResult{};
