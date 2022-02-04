@@ -6,13 +6,14 @@
 #include "Core/BGPlayerController.h"
 #include "Core/BGTypes.h"
 
-
 #include "BGLobbyPlayerController.generated.h"
 
 class UBGLobbyMenu;
+class UBGGameInstance;
+class ABGLobbyGameStateBase;
 
 /**
- * 
+ * Player Controller for Lobby
  */
 UCLASS()
 class BATTLEGRIDS_API ABGLobbyPlayerController : public ABGPlayerController
@@ -20,17 +21,15 @@ class BATTLEGRIDS_API ABGLobbyPlayerController : public ABGPlayerController
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
-	void UpdateServerData(FBGServerData const& InServerData);
-	
-	UFUNCTION(Client, Reliable)
-	void UpdateLobbyInformation();
+	ABGLobbyPlayerController();
+
+	UFUNCTION(Client, Reliable, BlueprintCallable, Category = "BGLobbyPlayerController|UI")
+	void SetupLobbyUI();
 
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void Tick(float DeltaSeconds) override;
 
-	UPROPERTY(Replicated)
-	FBGServerData ServerData;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
